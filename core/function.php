@@ -1,11 +1,5 @@
 <?php
 
-// load view 
-function loadView($file)
-{
-    return include PATH_VIEW.'/'.$file.'.php';
-}
-
 // redirect url 
 function redirect($url)
 {
