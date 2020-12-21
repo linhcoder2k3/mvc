@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Controllers;
-if (empty(PATH_ROOT)) {
-  die('bad request!');
-}
 class HomeController extends BaseController
 {
   public $data;
@@ -23,4 +20,8 @@ class HomeController extends BaseController
     return $this->Render('home', $this->data);
   }
 
+  public function test(int $var = null)
+  {
+     echo $var;
+  }
 }

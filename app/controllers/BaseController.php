@@ -1,7 +1,6 @@
 <?php 
 namespace App\Controllers;
 use Core\helper\View;
-if(empty(PATH_ROOT)) { die('bad request!'); }
 class BaseController extends View
 {
     public function __construct() {

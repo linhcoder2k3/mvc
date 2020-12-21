@@ -7,7 +7,7 @@ namespace Core\Http;
  * Class Route
  * 
  */
-class Route
+class Route extends Middleware
 {
 
     /**
@@ -34,10 +34,10 @@ class Route
      * @return void
      * 
      */
-    public function get(string $url, $action)
+    public function get(string $url, $action, $middleware = [])
     {
             // Xử lý phương thức GET
-            $this->__request($url, 'GET', $action);
+            $this->__request($url, 'GET', $action, $middleware);
     }
 
     /**
@@ -50,10 +50,10 @@ class Route
      * @return void
      * 
      */
-    public function post(string $url, $action)
+    public function post(string $url, $action, $middleware = [])
     {
          // Xử lý phương thức POST
-         $this->__request($url, 'POST', $action);
+         $this->__request($url, 'POST', $action, $middleware);
     }
     
     /**
@@ -67,8 +67,12 @@ class Route
      * @return void
      * 
      */
-    private function __request(string $url, string $method, $action)
+    private function __request(string $url, string $method, $action, $middleware)
     {
+        // if(!empty($middleware)){
+        //     $this->loadMiddleware($middleware);
+        // }
+
         // kiem tra xem URL co chua param khong. VD: post/{id}
         if (preg_match_all('/({([a-zA-Z]+)})/', $url, $params)) {
             $url = preg_replace('/({([a-zA-Z]+)})/', '(.+)', $url);
@@ -81,7 +85,8 @@ class Route
             'url' => $url,
             'method' => $method,
             'action' => $action,
-            'params' => $params[2]
+            'params' => $params[2],
+            'middleware' => $middleware
         ];
         array_push($this->__routes, $route);
     }
@@ -106,8 +111,12 @@ class Route
     
                 // kiểm tra route hiện tại có phải là url đang được gọi.
                 $reg = '/^' . $route['url'] . '$/';
+                $middleware = $route['middleware'];
                 if (preg_match($reg, $url, $params)) {
                     array_shift($params);
+                            if(!empty($middleware)){
+            $this->loadMiddleware($middleware);
+        }
                     $this->__call_action_route($route['action'], $params);
                     return;
                 }
