@@ -36,8 +36,8 @@ class Route extends Middleware
      */
     public function get(string $url, $action, $middleware = [])
     {
-            // Xử lý phương thức GET
-            $this->__request($url, 'GET', $action, $middleware);
+        // Xử lý phương thức GET
+        $this->__request($url, 'GET', $action, $middleware);
     }
 
     /**
@@ -52,10 +52,10 @@ class Route extends Middleware
      */
     public function post(string $url, $action, $middleware = [])
     {
-         // Xử lý phương thức POST
-         $this->__request($url, 'POST', $action, $middleware);
+        // Xử lý phương thức POST
+        $this->__request($url, 'POST', $action, $middleware);
     }
-    
+
     /**
      * 
      * Xử lý phương thức
@@ -90,7 +90,7 @@ class Route extends Middleware
         ];
         array_push($this->__routes, $route);
     }
-    
+
     /**
      * 
      * Hàm xử lý khi một URL được gọi
@@ -105,29 +105,30 @@ class Route extends Middleware
     {
         // Lặp qua các route trong ứng dụng, kiểm tra có chứa url được gọi không
         foreach ($this->__routes as $route) {
-    
+
             // nếu route có $method
             if ($route['method'] == $method) {
-    
+
                 // kiểm tra route hiện tại có phải là url đang được gọi.
                 $reg = '/^' . $route['url'] . '$/';
-                $middleware = $route['middleware'];
                 if (preg_match($reg, $url, $params)) {
                     array_shift($params);
-                            if(!empty($middleware)){
-            $this->loadMiddleware($middleware);
-        }
+                    if($_SERVER['CSRF_Token'] == 'on') $this->loadCSRF();
+                    $middleware = $route['middleware'];
+                    if (!empty($middleware)) {
+                        $this->loadMiddleware($middleware);
+                    }
                     $this->__call_action_route($route['action'], $params);
                     return;
                 }
             }
         }
-    
+
         // nếu không khớp với bất kì route nào cả.
         echo '404 - Not Found';
         return;
     }
-    
+
     /**
      * 
      * Hàm gọi action route
@@ -145,14 +146,14 @@ class Route extends Middleware
             call_user_func_array($action, $params);
             return;
         }
-    
+
         // Nếu $action là một phương thức của controller. VD: 'HomeController@index'.
         if (is_string($action)) {
             $action = explode('@', $action);
             $controller_name = 'App\\Controllers\\' . $action[0];
             $controller = new $controller_name();
             call_user_func_array([$controller, $action[1]], $params);
-    
+
             return;
         }
     }

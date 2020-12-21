@@ -7,7 +7,7 @@ namespace Core\Http;
  * Class Middleware
  * 
  */
-class Middleware
+class Middleware extends Security
 {
   public function loadMiddleware($arr)
   {

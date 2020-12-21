@@ -42,3 +42,34 @@ while ($old_data !== $data);
 // we are done...
 return $data;
 }
+
+// ramdom string
+function randomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+// meta csrf
+function meta_csrf()
+{
+    return '<meta name="'.$_SERVER['CSRF_Name'].'" content="'.$_SESSION[$_SERVER['CSRF_Name']].'" />
+';
+}
+
+// jquery csrf
+function jquery_csrf()
+{
+   return '<script>
+   $.ajaxSetup({
+    headers: {
+        "'.$_SERVER['CSRF_Name'].'": $("meta[name="X-CSRF-TOKEN"]").attr("content")
+    }
+});
+</script>
+';
+}

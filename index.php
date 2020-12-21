@@ -1,4 +1,5 @@
 <?php
+session_start();
 $minPHPVersion = 7.2;
 if (phpversion() < $minPHPVersion)
 {

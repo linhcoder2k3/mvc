@@ -10,7 +10,6 @@ class BaseController extends View
     public function Render($file,$data= [])
     {
         $data['DB'] = $this->DB;
-        $data['Session'] = $this->Session;
         $data['Date'] = $this->Date;
         echo $this->engine->render($file.'.php', $data);
     }
